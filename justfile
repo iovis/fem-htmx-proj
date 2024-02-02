@@ -8,7 +8,7 @@ default: dev
 
 # start the server
 dev:
-    watchexec -re go -- go run cmd/main.go
+    watchexec -re go,html,css,js -- "go build -o /tmp/main cmd/main.go && codesign -s - /tmp/main; /tmp/main"
 
 # open the project in the browser
 open:
