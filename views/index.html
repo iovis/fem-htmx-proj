@@ -20,18 +20,33 @@
 </head>
 
 <body>
-  {{ template "form" . }}
+  {{ template "form" .Form }}
   <hr>
-  {{ template "contacts" . }}
+  {{ template "contacts" .Data }}
+
+  <script>
+    document.addEventListener("DOMContentLoaded", event => {
+      document.body.addEventListener("htmx:beforeSwap", evt => {
+        if (evt.detail.xhr.status === 422) {
+          evt.detail.shouldSwap = true;
+          evt.detail.isError = false;
+        }
+      })
+    })
+  </script>
 </body>
 
 </html>
 {{ end }}
 
 {{ block "form" . }}
-<form hx-post="/contacts" hx-target="#contacts" hx-swap="outerHTML">
-  name: <input type="text" name="name" autofocus>
-  email: <input type="text" name="email">
+<form hx-post="/contacts" hx-swap="outerHTML">
+  name: <input {{ if .Values.name }} value="{{ .Values.name }}" {{ end }} type="text" name="name" autofocus>
+  email: <input {{ if .Values.email }} value="{{ .Values.email }}" {{ end }} type="text" name="email">
+
+  {{ if .Errors.email }}
+  <div style="color: red;">{{ .Errors.email }}</div>
+  {{ end }}
 
   <button type="submit">Create Contact</button>
 </form>
@@ -40,10 +55,20 @@
 {{ block "contacts" . }}
 <div id="contacts" style="display: flex; flex-direction: column;">
   {{ range .Contacts }}
-  <div>
-    Name: <span>{{ .Name }}</span>
-    Email: <span>{{ .Email }}</span>
-  </div>
+  {{ template "contact" . }}
   {{ end }}
+</div>
+{{ end }}
+
+{{ block "contact" . }}
+<div>
+  Name: <span>{{ .Name }}</span>
+  Email: <span>{{ .Email }}</span>
+</div>
+{{ end }}
+
+{{ block "oob-contact" . }}
+<div id="contacts" hx-swap-oob="afterbegin">
+  {{ template "contact" . }}
 </div>
 {{ end }}

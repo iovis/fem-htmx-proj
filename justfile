@@ -1,4 +1,4 @@
-set dotenv-load
+set dotenv-load := true
 
 default: dev
 
@@ -8,7 +8,7 @@ default: dev
 
 # start the server
 dev:
-    watchexec -re go,html,css,js -- "go build -o /tmp/main cmd/main.go && codesign -s - /tmp/main; /tmp/main"
+    watchexec -re go,html,css,js -- go run cmd/main.go
 
 # open the project in the browser
 open:
@@ -17,11 +17,9 @@ open:
 # start a console
 # console:
 #     rails console
-
 # run tests
 # test:
 #     rspec
-
 # Open the DB
 # db:
 #     pgcli $DATABASE_URL
