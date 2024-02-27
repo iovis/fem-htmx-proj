@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="/css/index.css">
 
   <style>
     body {
@@ -66,6 +67,7 @@
     hx-delete="/contacts/{{ .Id }}"
     hx-swap="outerHTML"
     hx-target="#contact-{{ .Id }}"
+    hx-indicator="#contact-indicator-{{ .Id }}"
     style="width: 1rem; cursor: pointer;"
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -77,6 +79,10 @@
 
   Name: <span>{{ .Name }}</span>
   Email: <span>{{ .Email }}</span>
+
+  <div id="contact-indicator-{{ .Id }}" class="htmx-indicator">
+    <img src="/images/bars.svg" alt="loading" style="width: 1rem;">
+  </div>
 </div>
 {{ end }}
 

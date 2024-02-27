@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -107,8 +108,10 @@ func newPage() Page {
 func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
-	e.Renderer = newTemplate()
+	e.Static("/images", "images")
+	e.Static("/css", "css")
 
+	e.Renderer = newTemplate()
 	page := newPage()
 
 	e.GET("/", func(c echo.Context) error {
@@ -136,6 +139,8 @@ func main() {
 	})
 
 	e.DELETE("/contacts/:id", func(c echo.Context) error {
+		time.Sleep(3 * time.Second)
+
 		id_str := c.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
